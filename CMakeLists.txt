@@ -14,13 +14,21 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(Server
 	server.cpp
-)
+    Block.h 
+	Block.cpp
+	Game.h
+	Game.cpp
+ "NetworkManager.h" "NetworkManager.cpp")
 target_link_libraries(Server PUBLIC wsock32 ws2_32)
 
 add_executable(Client
 	client.cpp
-)
+    Block.h 
+	Block.cpp
+	Game.h
+	Game.cpp
+ "NetworkManager.h" "NetworkManager.cpp")
 target_link_libraries(Client PUBLIC wsock32 ws2_32)
 
-target_link_libraries(Server PUBLIC sfml-graphics sfml-window sfml-system)
-target_link_libraries(Client PUBLIC sfml-graphics sfml-window sfml-system)
+target_link_libraries(Server PUBLIC sfml-graphics sfml-window sfml-system sfml-network)
+target_link_libraries(Client PUBLIC sfml-graphics sfml-window sfml-system sfml-network)

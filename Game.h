@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Block.h"
-#include "NetworkManager.h"
+#include "ServerNetworkManager.h"
+#include "ClientNetworkManager.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -25,8 +26,15 @@ private:
     void initNetwork();
     void handleMouseClicked();
     void drawBlocks();
+
+    void handleReceived();
+
+    inline static const std::string clientSymbol = "O";
+    inline static const std::string serverSymbol = "X";
 private:
-    NetworkManager networkManager;
+
+    ServerNetworkManager serverNetworkManager;
+    ClientNetworkManager clientNetworkManager;
     bool isServer = false;
     std::string serverAddress{};
     int serverPort = 0;

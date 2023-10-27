@@ -18,7 +18,12 @@ add_executable(Server
 	Block.cpp
 	Game.h
 	Game.cpp
- "NetworkManager.h" "NetworkManager.cpp")
+	ClientNetworkManager.h 
+	ClientNetworkManager.cpp
+	ServerNetworkManager.h
+	ServerNetworkManager.cpp
+)
+
 target_link_libraries(Server PUBLIC wsock32 ws2_32)
 
 add_executable(Client
@@ -27,7 +32,12 @@ add_executable(Client
 	Block.cpp
 	Game.h
 	Game.cpp
- "NetworkManager.h" "NetworkManager.cpp")
+    ClientNetworkManager.h 
+	ClientNetworkManager.cpp
+	ServerNetworkManager.h
+	ServerNetworkManager.cpp
+)
+
 target_link_libraries(Client PUBLIC wsock32 ws2_32)
 
 target_link_libraries(Server PUBLIC sfml-graphics sfml-window sfml-system sfml-network)

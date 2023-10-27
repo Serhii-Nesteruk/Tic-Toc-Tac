@@ -46,25 +46,25 @@ void Game::initBlocks()
     const int numCols = 3;
     const sf::Color blockColor = sf::Color::Blue;
 
-    for (int i = 0; i < numRows; ++i) {
-        int blockId = 0;
-
+    int blockId = 0;
+    for (int i = 0; i < numRows; ++i) 
         for (int j = 0; j < numCols; ++j) {
             sf::Vector2f position(j * 200, i * 200);
             Block block(position, blockColor, font, blockId);
             blocks.push_back(block);
+            std::cout << blockId << std::endl;
             ++blockId;
+            
         }
-    }
 }
 
 void Game::initNetwork()
 {
     if (isServer) {
-        networkManager.startServer(serverPort);
+        serverNetworkManager.setup();
     }
     else {
-        networkManager.connectToServer(serverAddress, serverPort);
+        clientNetworkManager.setup();
     }
 }
 
@@ -77,15 +77,14 @@ void Game::handleMouseClicked()
             block.setTextColor(sf::Color::White);
             block.setText(blockText);
 
-            int blockId = block.getBlockID();
-            networkManager.sendBlockId(blockId);
+            if (isServer) {
+                serverNetworkManager.sendBlockID(block);
+            }
+            else {
+                clientNetworkManager.sendBlockId(block);
+            }
         }
     }
-
-    if (networkManager.receiveBlockId())
-        for (auto& block : blocks) 
-            if (block.getBlockID() == networkManager.getReceivedBlockId())
-                block.setText("O");
 }
 
 void Game::drawBlocks()
@@ -94,9 +93,23 @@ void Game::drawBlocks()
         block.draw(window);
 }
 
+void Game::handleReceived()
+{
+    int serverBuffer = serverNetworkManager.receivedBlockId();
+    int clientBuffer = clientNetworkManager.receivedBlockId();
+
+    for (auto& block : blocks) {
+        if (block.getBlockID() == serverBuffer) 
+            block.setText(clientSymbol);
+        if (block.getBlockID() == clientBuffer)
+            block.setText(serverSymbol);
+    }
+}
+
 void Game::start() {
     while (window.isOpen()) {
         eventHandling();
+        handleReceived();
         display();
     }
 }
